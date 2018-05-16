@@ -4,6 +4,12 @@ public class Player
     private String name;
     private int goals;
 
+    public Player()
+    {
+        name = "";
+        goals = 0;
+    }
+
     public Player(String inputName, int inputGoals)
     {
         name = inputName;

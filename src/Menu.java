@@ -52,4 +52,39 @@ public class Menu {
     {
         System.out.println(teamName + "," + teamRank);
     }
+
+    public void typePlayerInfo(String teamName, int playerNumber)
+    {
+        System.out.println("Please input the name of player" + playerNumber + " in team " + teamName + ":");
+    }
+
+    public void typePlayerCharError()
+    {
+        System.out.println("Please enter all letters in the player's name.");
+    }
+
+    public void displayPlayers(String teamName, String playerName, int playerGoal)
+    {
+        System.out.println(playerName + " (" + teamName + ") - " + playerGoal );
+    }
+
+    public void multiHyphenError()
+    {
+        System.out.println("Only one hyphen allowed in player's name.");
+    }
+
+    public void startAndEndHyphenError()
+    {
+        System.out.println("The player's name is not allowed to start or end with \"-\".");
+    }
+
+    public void duplicatedNameError()
+    {
+        System.out.println("The player's name can not be same as the other player's.");
+    }
+
+    public void nameLengthError()
+    {
+        System.out.println("Player's name should have at least 2 characters and less then 20 characters.");
+    }
 }

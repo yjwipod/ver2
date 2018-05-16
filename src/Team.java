@@ -17,6 +17,8 @@ public class Team
     {
         name = inputName;
         ranking = inputRanking;
+        player1 = new Player();
+        player2 = new Player();
     }
 
     public String getName()
