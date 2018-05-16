@@ -118,18 +118,14 @@ public class Game
                 //球员姓名初始化
                 String playerName = tools.typeIn();
                 //放入while循环判断，如果不符合要求则不跳出循环
-
-                while (!tools.allCharacter(playerName)  || !tools.noStartAndEndHyphen(playerName) || !tools.oneHyphen(playerName)
+                //球员姓名的规则首尾-不能有；中间只能有一个-；同队不能重名；至少两个字母；需要最大值
+                while (!tools.allCharacter(playerName) || !tools.noStartAndEndHyphen(playerName) || !tools.oneHyphen(playerName)
                         || !tools.noDuplicatedName(teams.get(i).getPlayer1().getName(),playerName) || !tools.noLessTwoLength(playerName))
                 {
-                    //循环内显示错误信息
-                    //menu.typePlayerCharError();
                     //要求重新输入“'某'队的球员'几号'”的姓名
                     menu.typePlayerInfo(teamName, j);
                     //再次给姓名赋值
                     playerName = tools.typeIn();
-                //ToDo 首尾--不能有；中间只能有一个-；同队不能重名；至少两个字母；需要最大值
-
                 }
                 switch (j)
                 {
