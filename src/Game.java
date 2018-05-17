@@ -21,10 +21,12 @@ public class Game
         Scanner console = new Scanner(System.in);
         //初始化用户输入值的变量
         String input = "";
+        teams = tools.readFile();
 
         //读取team.txt,如果读取成功，则进入下一环节显示菜单；若不成功，则退出程序
-        if (readFile())
+        if (teams.size() != 0)
         {
+
             inputPlayer();
             //toUpperCase()用来将输入值变为大写，避免因为用户输入小写而无法识别
             while (!input.toUpperCase().equals("X"))
@@ -58,50 +60,7 @@ public class Game
         }
     }
 
-    public boolean readFile()
-    {
-        boolean readSuccessful = false;
-        try
-        {
-            //定义文档名称
-            String filename = "team.txt";
-            //新建阅读器
-            FileReader inputFile = new FileReader(filename);
-            //新建解析器
-            Scanner parser = new Scanner(inputFile);
-            //逐行解析文档
-            while(parser.hasNextLine())
-            {
-                //读取一行
-                String line = parser.nextLine();
-                //识别每一行的逗号，将前后的信息分别取出，存入数组中
-                String[] detail = line.split(",");
-                //新建String构造器
-                StringBuilder subjectsToString = new StringBuilder();
-                //新建Team对象，存入数组中的信息：第0位的是team name，第1位的是ranking
-                Team newTeam = new Team(detail[0], Integer.parseInt(detail[1]));
-                //将这支team存入team list中
-                teams.add(newTeam);
-                readSuccessful = true;
-            }
-            inputFile.close();
 
-            if (teams.size() == 0)
-                menu.emptyFileInfo();
-            else
-                //读取成功
-                menu.readSuccessful();
-        }
-        catch (IOException e)//获取输入输出（读取文件）时的系统错误
-        {
-            menu.fileNotFoundInfo();
-        }
-        catch (RuntimeException e)//获取运行时的系统错误
-        {
-            menu.fileContentErrorInfo();
-        }
-        return readSuccessful;
-    }
 
     public void inputPlayer()
     {
@@ -118,7 +77,7 @@ public class Game
                 //球员姓名初始化
                 String playerName = tools.typeIn();
                 //放入while循环判断，如果不符合要求则不跳出循环
-                //球员姓名的规则首尾-不能有；中间只能有一个-；同队不能重名；至少两个字母；需要最大值
+                //球员名字只能用字母；球员姓名的规则首尾-不能有；中间只能有一个-；同队不能重名；至少两个字母；需要最大值
                 while (!tools.allCharacter(playerName) || !tools.noStartAndEndHyphen(playerName) || !tools.oneHyphen(playerName)
                         || !tools.noDuplicatedName(teams.get(i).getPlayer1().getName(),playerName) || !tools.noLessTwoLength(playerName))
                 {

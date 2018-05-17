@@ -1,11 +1,60 @@
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Tools {
 
     private Menu menu;
+
     public Tools()
     {
         menu = new Menu();
+    }
+
+    public ArrayList readFile()
+    {
+        ArrayList teams = new ArrayList<>();
+        try
+        {
+
+            //定义文档名称
+            String filename = "team.txt";
+            //新建阅读器
+            FileReader inputFile = new FileReader(filename);
+            //新建解析器
+            Scanner parser = new Scanner(inputFile);
+            //逐行解析文档
+            while(parser.hasNextLine())
+            {
+                //读取一行
+                String line = parser.nextLine();
+                //识别每一行的逗号，将前后的信息分别取出，存入数组中
+                String[] detail = line.split(",");
+                //新建String构造器
+                StringBuilder subjectsToString = new StringBuilder();
+                //新建Team对象，存入数组中的信息：第0位的是team name，第1位的是ranking
+                Team newTeam = new Team(detail[0], Integer.parseInt(detail[1]));
+                //将这支team存入team list中
+                teams.add(newTeam);
+            }
+            inputFile.close();
+
+            if (teams.size() == 0)
+                menu.emptyFileInfo();
+            else
+                //读取成功
+                menu.readSuccessful();
+        }
+        catch (IOException e)//获取输入输出（读取文件）时的系统错误
+        {
+            menu.fileNotFoundInfo();
+        }
+        catch (RuntimeException e)//获取运行时的系统错误
+        {
+            menu.fileContentErrorInfo();
+        }
+        return teams;
     }
 
     public boolean allCharacter(String input)
