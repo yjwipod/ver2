@@ -1,6 +1,8 @@
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Scanner;
 
 public class Game
@@ -116,6 +118,11 @@ public class Game
         }
     }
 
+    public void displayResult()
+    {
+
+    }
+
     public Integer[] playGame(Team team1, Team team2)
     {
         int rank1 = team1.getRanking();
@@ -128,8 +135,24 @@ public class Game
             goal1 = tools.randomNumber(6 + tools.randomNumber(3));
             //名次低的一队的得分。得分范围是0至5 - 名次之差 + 0~2的随机数
             goal2 = tools.randomNumber(6 - (rank2 - rank1) + tools.randomNumber(3));
-            teamInfoUpdate(team1, 0 , 0, 0 , goal1, 0, 0);
-            teamInfoUpdate(team2, 0 , 0, 0 , goal2, 0, 0);
+            if (goal1 > goal2)
+            {
+                teamInfoUpdate(team1, 1 , 0, 0 , goal1, 0, 0);
+                teamInfoUpdate(team2, 0 , 1, 0 , goal2, 0, 0);
+            }
+            else
+            {
+                if (goal1 < goal2)
+                {
+                    teamInfoUpdate(team1, 0 , 1, 0 , goal1, 0, 0);
+                    teamInfoUpdate(team2, 1 , 0, 0 , goal2, 0, 0);
+                }
+                else
+                {
+                    teamInfoUpdate(team1, 0 , 0, 1 , goal1, 0, 0);
+                    teamInfoUpdate(team2, 0 , 0, 1 , goal2, 0, 0);
+                }
+            }
 
         }
         else
@@ -137,9 +160,25 @@ public class Game
             //名次高的一队的得分。得分范围是0至5 + 0~2的随机数
             goal2 = tools.randomNumber(6 + tools.randomNumber(3));
             //名次低的一队的得分。得分范围是0至5 - 名次之差 + 0~2的随机数
-            goal1 = tools.randomNumber(6 - (rank2 - rank1) + tools.randomNumber(3));
-            teamInfoUpdate(team1, 0 , 0, 0 , goal1, 0, 0);
-            teamInfoUpdate(team2, 0 , 0, 0 , goal2, 0, 0);
+            goal1 = tools.randomNumber(6 - (rank1 - rank2) + tools.randomNumber(3));
+            if (goal1 > goal2)
+            {
+                teamInfoUpdate(team1, 1 , 0, 0 , goal1, 0, 0);
+                teamInfoUpdate(team2, 0 , 1, 0 , goal2, 0, 0);
+            }
+            else
+            {
+                if (goal1 < goal2)
+                {
+                    teamInfoUpdate(team1, 0 , 1, 0 , goal1, 0, 0);
+                    teamInfoUpdate(team2, 1 , 0, 0 , goal2, 0, 0);
+                }
+                else
+                {
+                    teamInfoUpdate(team1, 0 , 0, 1 , goal1, 0, 0);
+                    teamInfoUpdate(team2, 0 , 0, 1 , goal2, 0, 0);
+                }
+            }
         }
         Integer[] goals = {goal1, goal2};
 
@@ -198,7 +237,8 @@ public class Game
         }
     }
 
-    public void teamInfoUpdate(Team team, int wins, int losts, int drawns, int goals, int points, int fairPlayScore)
+    public void teamInfoUpdate(Team team, int wins, int losts, int drawns,
+                               int goals, int points, int fairPlayScore)
     {
         team.setPlayed(team.getPlayed() + 1);
         team.setWins(team.getWins() + wins);

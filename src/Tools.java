@@ -1,6 +1,7 @@
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -66,6 +67,15 @@ public class Tools {
         }
         return teams;
     }
+//
+//    public ArrayList sortByTeamGoals(ArrayList<Team> teams)
+//    {
+//        teams.sort(teams, );
+//        ArrayList<Team> newTeams = new ArrayList<Team>();
+//        //Collections.sort(teams,new SortByGoals);
+//
+//        return newTeams;
+//    }
 
     public boolean allCharacter(String input)
     {

@@ -51,8 +51,8 @@ public class Menu {
     public void displayTeam(String teamName, int teamRank, int teamPlayed, int teamWins,
                             int teamLosts,int teamDrawns,int teamGoals, int teamPoints,int teamFairPlayScore)
     {
-        System.out.println(teamName + "," + teamRank + "," + teamPlayed + "," + teamWins + ","
-                + teamLosts + "," + teamDrawns + "," + teamGoals + "," + teamPoints + "," + teamFairPlayScore);
+        System.out.println(teamName + ", Rank: " + teamRank + ", Played: " + teamPlayed + ", Wins:" + teamWins + ", Losts: "
+                + teamLosts + ", Drawns: " + teamDrawns + ", Goals: " + teamGoals + ", Points:" + teamPoints + ", Fair Play Score: " + teamFairPlayScore);
     }
 
     public void typePlayerInfo(String teamName, int playerNumber)
