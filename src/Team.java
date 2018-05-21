@@ -43,6 +43,20 @@ public class Team
         player2 = new Player();
     }
 
+    public Team()
+    {
+        name = "";
+        ranking = 0;
+        played = 0;
+        wins = 0;
+        losts = 0;
+        drawns = 0;
+        goals = 0;
+        points = 0;
+        fairPlayScore = 0;
+        player1 = null;
+        player2 = null;
+    }
 
 
     public String getName()

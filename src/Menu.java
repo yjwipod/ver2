@@ -48,9 +48,11 @@ public class Menu {
         System.out.println("File contents error!");
     }
 
-    public void displayTeam(String teamName, int teamRank)
+    public void displayTeam(String teamName, int teamRank, int teamPlayed, int teamWins,
+                            int teamLosts,int teamDrawns,int teamGoals, int teamPoints,int teamFairPlayScore)
     {
-        System.out.println(teamName + "," + teamRank);
+        System.out.println(teamName + "," + teamRank + "," + teamPlayed + "," + teamWins + ","
+                + teamLosts + "," + teamDrawns + "," + teamGoals + "," + teamPoints + "," + teamFairPlayScore);
     }
 
     public void typePlayerInfo(String teamName, int playerNumber)
@@ -86,5 +88,12 @@ public class Menu {
     public void nameLengthError()
     {
         System.out.println("Player's name should have at least 2 characters and less then 20 characters.");
+    }
+
+    public void displayPreliminaryResult(String name, String name1, Integer[] goals)
+    {
+        int goalA = goals[0];
+        int goalB = goals[1];
+        System.out.println("Game result: " + name + " " + goalA +  " vs. " + name1 + " " + goalB);
     }
 }

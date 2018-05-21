@@ -1,6 +1,7 @@
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.Scanner;
 
 public class Tools {
@@ -10,6 +11,15 @@ public class Tools {
     public Tools()
     {
         menu = new Menu();
+    }
+
+    public int randomNumber(int amount)
+    {
+        int randomNumber = -1;
+        Random builder = new Random();
+        //生成一个0~amount - 1的随机数。如amount = 6，则生成0~5
+        randomNumber = builder.nextInt(amount);
+        return randomNumber;
     }
 
     public ArrayList readFile()

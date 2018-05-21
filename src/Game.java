@@ -26,7 +26,7 @@ public class Game
         //读取team.txt,如果读取成功，则进入下一环节显示菜单；若不成功，则退出程序
         if (teams.size() != 0)
         {
-
+            //输入球员信息
             inputPlayer();
             //toUpperCase()用来将输入值变为大写，避免因为用户输入小写而无法识别
             while (!input.toUpperCase().equals("X"))
@@ -38,6 +38,7 @@ public class Game
                 switch (input.toUpperCase())
                 {
                     case "A":
+                        playPreliminaryStage();
                         break;
                     case "B":
                         break;
@@ -99,6 +100,52 @@ public class Game
         }
     }
 
+    public void playPreliminaryStage()
+    {
+        //开始预赛，读取每一个球队
+        for (int i = 0; i < teams.size(); i++)
+        {
+            Team teamA = teams.get(i);
+            //获取teamA之后的球队
+            for (int j = i + 1; j < teams.size(); j++)
+            {
+                Team teamB = teams.get(j);
+                Integer[] goals = playGame(teamA, teamB);
+                menu.displayPreliminaryResult(teamA.getName(), teamB.getName(), goals);
+            }
+        }
+    }
+
+    public Integer[] playGame(Team team1, Team team2)
+    {
+        int rank1 = team1.getRanking();
+        int rank2 = team2.getRanking();
+        int goal1 = 0;
+        int goal2 = 0;
+        if (rank1 < rank2)
+        {
+            //名次高的一队的得分。得分范围是0至5 + 0~2的随机数
+            goal1 = tools.randomNumber(6 + tools.randomNumber(3));
+            //名次低的一队的得分。得分范围是0至5 - 名次之差 + 0~2的随机数
+            goal2 = tools.randomNumber(6 - (rank2 - rank1) + tools.randomNumber(3));
+            teamInfoUpdate(team1, 0 , 0, 0 , goal1, 0, 0);
+            teamInfoUpdate(team2, 0 , 0, 0 , goal2, 0, 0);
+
+        }
+        else
+        {
+            //名次高的一队的得分。得分范围是0至5 + 0~2的随机数
+            goal2 = tools.randomNumber(6 + tools.randomNumber(3));
+            //名次低的一队的得分。得分范围是0至5 - 名次之差 + 0~2的随机数
+            goal1 = tools.randomNumber(6 - (rank2 - rank1) + tools.randomNumber(3));
+            teamInfoUpdate(team1, 0 , 0, 0 , goal1, 0, 0);
+            teamInfoUpdate(team2, 0 , 0, 0 , goal2, 0, 0);
+        }
+        Integer[] goals = {goal1, goal2};
+
+        return goals;
+    }
+
     public void readTeam()
     {
         //逐一读取teams列表中的所有team
@@ -108,8 +155,22 @@ public class Game
             String teamName = teams.get(i).getName();
             //读取team rank
             int teamRank = teams.get(i).getRanking();
+            //读取team played
+            int teamPlayed = teams.get(i).getPlayed();
+            //读取team wins
+            int teamWins = teams.get(i).getWins();
+            //读取team Losts
+            int teamLosts = teams.get(i).getLosts();
+            //读取team Draws
+            int teamDrawns = teams.get(i).getDrawns();
+            //读取team Goals
+            int teamGoals = teams.get(i).getGoals();
+            //读取team Points
+            int teamPoints = teams.get(i).getPoints();
+            //读取team FairPlayScore
+            int teamFairPlayScore = teams.get(i).getFairPlayScore();
             //显示team
-            menu.displayTeam(teamName,teamRank);
+            menu.displayTeam(teamName,teamRank,teamPlayed,teamWins,teamLosts,teamDrawns,teamGoals,teamPoints,teamFairPlayScore);
         }
     }
 
@@ -134,10 +195,18 @@ public class Game
                         menu.displayPlayers(teamName,player2Name,player2Goal);
                 }
             }
-
-
-
         }
+    }
+
+    public void teamInfoUpdate(Team team, int wins, int losts, int drawns, int goals, int points, int fairPlayScore)
+    {
+        team.setPlayed(team.getPlayed() + 1);
+        team.setWins(team.getWins() + wins);
+        team.setLosts(team.getLosts() + losts);
+        team.setDrawns(team.getDrawns() + drawns);
+        team.setGoals(team.getGoals() + goals);
+        team.setPoints(team.getPoints() + points);
+        team.setFairPlayScore(team.getFairPlayScore() + fairPlayScore);
     }
 
     public static void main(String[] args) {
