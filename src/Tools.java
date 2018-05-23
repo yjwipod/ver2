@@ -67,6 +67,11 @@ public class Tools {
         }
         return teams;
     }
+
+    public void sort(ArrayList<Team> teams)
+    {
+
+    }
 //
 //    public ArrayList sortByTeamGoals(ArrayList<Team> teams)
 //    {

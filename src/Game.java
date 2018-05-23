@@ -10,11 +10,13 @@ public class Game
     private ArrayList<Team> teams;
     private Menu menu;
     private Tools tools;
+    private int preliminaryFlag;
 
     public Game() {
         teams = new ArrayList<>();
         menu = new Menu();
         tools = new Tools();
+        preliminaryFlag = 0;
     }
 
     public void startGame()
@@ -43,8 +45,10 @@ public class Game
                         playPreliminaryStage();
                         break;
                     case "B":
+                        playFinalStage();
                         break;
                     case "C":
+                        menu.displayTeamHeader();
                         readTeam();
                         break;
                     case "D":
@@ -107,14 +111,29 @@ public class Game
         //开始预赛，读取每一个球队
         for (int i = 0; i < teams.size(); i++)
         {
+            //这样的取值方法下，teamA的排序永远比teamB靠前。重要！！！
             Team teamA = teams.get(i);
             //获取teamA之后的球队
             for (int j = i + 1; j < teams.size(); j++)
             {
                 Team teamB = teams.get(j);
-                Integer[] goals = playGame(teamA, teamB);
-                menu.displayPreliminaryResult(teamA.getName(), teamB.getName(), goals);
+                String[] info = playGame(teamA, teamB);
+                menu.displayPreliminaryResult(teamA.getName(), teamB.getName(), info);
             }
+        }
+        //预赛标识符置1，代表预赛踢完了
+        preliminaryFlag = 1;
+    }
+
+    public void playFinalStage()
+    {
+        if (preliminaryFlag == 1)
+        {
+
+        }
+        else
+        {
+            menu.noPreliminaryError();
         }
     }
 
@@ -123,66 +142,81 @@ public class Game
 
     }
 
-    public Integer[] playGame(Team team1, Team team2)
+    public String[] playGame(Team team1, Team team2)
     {
         int rank1 = team1.getRanking();
         int rank2 = team2.getRanking();
         int goal1 = 0;
         int goal2 = 0;
-        if (rank1 < rank2)
-        {
-            //名次高的一队的得分。得分范围是0至5 + 0~2的随机数
-            goal1 = tools.randomNumber(6 + tools.randomNumber(3));
-            //名次低的一队的得分。得分范围是0至5 - 名次之差 + 0~2的随机数
-            goal2 = tools.randomNumber(6 - (rank2 - rank1) + tools.randomNumber(3));
-            if (goal1 > goal2)
-            {
-                teamInfoUpdate(team1, 1 , 0, 0 , goal1, 0, 0);
-                teamInfoUpdate(team2, 0 , 1, 0 , goal2, 0, 0);
-            }
-            else
-            {
-                if (goal1 < goal2)
-                {
-                    teamInfoUpdate(team1, 0 , 1, 0 , goal1, 0, 0);
-                    teamInfoUpdate(team2, 1 , 0, 0 , goal2, 0, 0);
-                }
-                else
-                {
-                    teamInfoUpdate(team1, 0 , 0, 1 , goal1, 0, 0);
-                    teamInfoUpdate(team2, 0 , 0, 1 , goal2, 0, 0);
-                }
-            }
+        String card1 = teamCard();
+        String card2 = teamCard();
+        int fairPlayScore1 = getFairPlayScore(card1);
+        int fairPlayScore2 = getFairPlayScore(card2);
 
+        //名次高的一队的得分。得分范围是0至5 + 0~2的随机数
+        goal1 = tools.randomNumber(6 + tools.randomNumber(3));
+        //名次低的一队的得分。得分范围是0至5 - 名次之差 + 0~2的随机数
+        goal2 = tools.randomNumber(6 - (rank2 - rank1) + tools.randomNumber(3));
+        //设定每一轮的比分
+        playOneRound(team1,team2,goal1,goal2,fairPlayScore1,fairPlayScore2);
+        //goal+""的作用是把int转为String，否则无法存入到String[]数组中
+        String[] information = {goal1+"", goal2+"", card1, card2};
+        setPlayerGoal(team1,team2,goal1,goal2);
+        return information;
+    }
+
+    public void setPlayerGoal(Team team1, Team team2, int goal1, int goal2)
+    {
+        //生成0~goal1的随机数，给team1的player1
+        int t1Player1Goal = tools.randomNumber(goal1 + 1);
+        int t1player2Goal = goal1 - t1Player1Goal;
+        team1.getPlayer1().setGoals(team1.getPlayer1().getGoals() + t1Player1Goal);
+        team1.getPlayer2().setGoals(team1.getPlayer2().getGoals() + t1player2Goal);
+
+        int t2Player1Goal = tools.randomNumber(goal2 + 1);
+        int t2player2Goal = goal2 - t2Player1Goal;
+        team2.getPlayer1().setGoals(team2.getPlayer1().getGoals() + t2Player1Goal);
+        team2.getPlayer2().setGoals(team2.getPlayer2().getGoals() + t2player2Goal);
+    }
+
+    public void playOneRound(Team team1, Team team2, int goal1, int goal2, int fairPlayScore1, int fairPlayScore2)
+    {
+        if (goal1 > goal2)
+        {
+            teamInfoUpdate(team1, 1 , 0, 0 , goal1, 3, fairPlayScore1);
+            teamInfoUpdate(team2, 0 , 1, 0 , goal2, 0, fairPlayScore2);
         }
         else
         {
-            //名次高的一队的得分。得分范围是0至5 + 0~2的随机数
-            goal2 = tools.randomNumber(6 + tools.randomNumber(3));
-            //名次低的一队的得分。得分范围是0至5 - 名次之差 + 0~2的随机数
-            goal1 = tools.randomNumber(6 - (rank1 - rank2) + tools.randomNumber(3));
-            if (goal1 > goal2)
+            if (goal1 < goal2)
             {
-                teamInfoUpdate(team1, 1 , 0, 0 , goal1, 0, 0);
-                teamInfoUpdate(team2, 0 , 1, 0 , goal2, 0, 0);
+                teamInfoUpdate(team1, 0 , 1, 0 , goal1, 0, fairPlayScore1);
+                teamInfoUpdate(team2, 1 , 0, 0 , goal2, 3, fairPlayScore2);
             }
             else
             {
-                if (goal1 < goal2)
-                {
-                    teamInfoUpdate(team1, 0 , 1, 0 , goal1, 0, 0);
-                    teamInfoUpdate(team2, 1 , 0, 0 , goal2, 0, 0);
-                }
-                else
-                {
-                    teamInfoUpdate(team1, 0 , 0, 1 , goal1, 0, 0);
-                    teamInfoUpdate(team2, 0 , 0, 1 , goal2, 0, 0);
-                }
+                teamInfoUpdate(team1, 0 , 0, 1 , goal1, 1, fairPlayScore1);
+                teamInfoUpdate(team2, 0 , 0, 1 , goal2, 1, fairPlayScore2);
             }
         }
-        Integer[] goals = {goal1, goal2};
+    }
 
-        return goals;
+    public int getFairPlayScore(String card)
+    {
+        int fairPlayScore = 0;
+        switch (card)
+        {
+            case "yellow":
+                fairPlayScore = 1;
+                break;
+            case "red":
+                fairPlayScore = 2;
+                break;
+            default:
+                fairPlayScore = 0;
+                break;
+        }
+        return fairPlayScore;
     }
 
     public void readTeam()
@@ -209,8 +243,30 @@ public class Game
             //读取team FairPlayScore
             int teamFairPlayScore = teams.get(i).getFairPlayScore();
             //显示team
-            menu.displayTeam(teamName,teamRank,teamPlayed,teamWins,teamLosts,teamDrawns,teamGoals,teamPoints,teamFairPlayScore);
+
+            menu.displayTeamInfo(teamName,teamRank,teamPlayed,teamWins,teamLosts,teamDrawns,teamGoals,teamPoints,teamFairPlayScore);
         }
+    }
+
+    public String teamCard()
+    {
+        String card = "no";
+        //在100个数中生成一个随机数，用来判定是否拿牌
+        int cardRate = tools.randomNumber(100);
+        //如果是80~99这20个数，则拿黄牌
+        if (cardRate > 79 && cardRate < 100)
+        {
+            card = "yellow";
+        }
+        else
+        {
+            //如果是60~64这5个数，则拿红牌（红牌的概率是黄牌的四分之一）
+            if (cardRate > 59 && cardRate < 65)
+            {
+                card = "red";
+            }
+        }
+        return card;
     }
 
     public void readPlayers()

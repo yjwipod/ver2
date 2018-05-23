@@ -16,7 +16,7 @@ public class Player
         goals = inputGoals;
     }
 
-    public String getName() 
+    public String getName()
     {
         return name;
     }
@@ -26,7 +26,7 @@ public class Player
         name = inputName;
     }
 
-    public int getGoals() 
+    public int getGoals()
     {
         return goals;
     }

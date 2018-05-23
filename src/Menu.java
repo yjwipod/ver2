@@ -48,11 +48,25 @@ public class Menu {
         System.out.println("File contents error!");
     }
 
-    public void displayTeam(String teamName, int teamRank, int teamPlayed, int teamWins,
+    public void displayTeamHeader()
+    {
+        System.out.printf("%20s%8s%6s%7s%8s%7s%8s%17s\n","Rank","Played","Wins","Losts","Drawns","Goals","Points","Fair Play Sores");
+    }
+
+    public void displayTeamInfo(String teamName, int teamRank, int teamPlayed, int teamWins,
                             int teamLosts,int teamDrawns,int teamGoals, int teamPoints,int teamFairPlayScore)
     {
-        System.out.println(teamName + ", Rank: " + teamRank + ", Played: " + teamPlayed + ", Wins:" + teamWins + ", Losts: "
-                + teamLosts + ", Drawns: " + teamDrawns + ", Goals: " + teamGoals + ", Points:" + teamPoints + ", Fair Play Score: " + teamFairPlayScore);
+        int nameSpace = 0;
+        if (teamName.length() > 5)
+            nameSpace = 14 - teamName.length() + 5;
+        else
+        {
+            if (teamName.length() < 5)
+                nameSpace = 14 + 5 - teamName.length();
+            else
+                nameSpace = 14;
+        }
+        System.out.printf("%s%" + nameSpace + "s%6s%8s%6s%7s%8s%7s%11s\n",teamName,teamRank,teamPlayed,teamWins,teamLosts,teamDrawns,teamGoals,teamPoints,teamFairPlayScore);
     }
 
     public void typePlayerInfo(String teamName, int playerNumber)
@@ -90,10 +104,20 @@ public class Menu {
         System.out.println("Player's name should have at least 2 characters and less then 20 characters.");
     }
 
-    public void displayPreliminaryResult(String name, String name1, Integer[] goals)
+    public void displayPreliminaryResult(String name, String name1, String[] info)
     {
-        int goalA = goals[0];
-        int goalB = goals[1];
+        String goalA = info[0];
+        String goalB = info[1];
+        String cardA = info[2];
+        String cardB = info[3];
         System.out.println("Game result: " + name + " " + goalA +  " vs. " + name1 + " " + goalB);
+        System.out.println("Cards awarded: " + name + " - " + cardA + " card." );
+        System.out.println("Cards awarded: " + name1 + " - " + cardB + " card." );
+        System.out.println("------------------------------");
+    }
+
+    public void noPreliminaryError()
+    {
+        System.out.println("The preliminary stage is not played.");
     }
 }
