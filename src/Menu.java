@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 public class Menu {
 
     public Menu()
@@ -8,6 +10,7 @@ public class Menu {
     //显示菜单
     public void display()
     {
+        System.out.println("========================================");
         System.out.println("A. Play Preliminary Stage");
         System.out.println("B. Play Final");
         System.out.println("C. Display Teams");
@@ -45,6 +48,15 @@ public class Menu {
     public void fileContentErrorInfo()
     {
         System.out.println("File contents error!");
+    }
+
+    public void writeFileErrorInfo()
+    {
+        System.out.println("Write text file unsuccessfully.");
+    }
+
+    public void writeFileSuccessful() {
+        System.out.println("Write file statistics.txt successfully!");
     }
 
     public void displayTeamHeader()
@@ -109,10 +121,10 @@ public class Menu {
         String goalB = info[1];
         String cardA = info[2];
         String cardB = info[3];
+        System.out.println("----------------------------------------");
         System.out.println("Game result: " + name + " " + goalA +  " vs. " + name1 + " " + goalB);
         System.out.println("Cards awarded: " + name + " - " + cardA + " card." );
         System.out.println("Cards awarded: " + name1 + " - " + cardB + " card." );
-        System.out.println("------------------------------");
     }
 
     public void noPreliminaryError()
@@ -124,4 +136,39 @@ public class Menu {
     {
         System.out.println("Golden Boot Award: " + playerName + " from " + playerCountry);
     }
+
+    public void displayPenaltyShootOutInfo()
+    {
+        System.out.println("Drawn! Now Starting Penalty Shootout!");
+    }
+
+    public void displayPenaltyShootOutResult(Team teamA, Team teamB, int goalA, int goalB, int penaltyShootOutGoalA, int penaltyShootOutGoalB)
+    {
+        System.out.println("Penalty Shootout Result is " + teamA.getName() + " " + penaltyShootOutGoalA
+                + " vs. " + teamB.getName() + " " + penaltyShootOutGoalB);
+        System.out.println("Final Game Result after Penalty Shootout: " + teamA.getName() + " "
+                + goalA + " vs. " + teamB.getName() + " " + goalB);
+    }
+
+    public void preliminaryPlayedError()
+    {
+        System.out.println("Preliminary stage is played!");
+    }
+
+    public void finalStagePlayedError()
+    {
+        System.out.println("Final stage is played!");
+    }
+
+
+
+    public void displayCupResult(ArrayList<String> results)
+    {
+        for (int i = 0; i < results.size(); i ++)
+        {
+            System.out.println(results.get(i));
+        }
+    }
+
 }
+

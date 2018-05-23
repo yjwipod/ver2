@@ -1,5 +1,6 @@
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.*;
 
 public class Tools {
@@ -63,6 +64,25 @@ public class Tools {
             menu.fileContentErrorInfo();
         }
         return teams;
+    }
+
+    public void writeFile(ArrayList<String> content)
+    {
+        try
+        {
+            String fileName = "statistics.txt";
+            PrintWriter outPutFile = new PrintWriter(fileName);
+            for (int i = 0; i < content.size(); i ++)
+            {
+                outPutFile.println(content.get(i));
+            }
+            outPutFile.close();
+            menu.writeFileSuccessful();
+        }
+        catch (IOException e)
+        {
+            menu.writeFileErrorInfo();
+        }
     }
 
     public ArrayList<Team> sortTeams(ArrayList<Team> teams)
@@ -150,6 +170,32 @@ public class Tools {
         }
 
         return goldenBootPlayers;
+    }
+
+    public ArrayList<Team> setFairPlayAward(ArrayList<Team> teams)
+    {
+        ArrayList<Team> awardedTeam = new ArrayList<>();
+        //因为每个队伍最多只比赛4轮（3轮预赛+1轮决赛），所以改分数最多为8分（每轮都是红牌，得2分）
+        int minFairPlayAward = 8;
+        for (int i = 0; i < teams.size(); i ++)
+        {
+            //如果最小分数大于某一队伍的分数，则更新该最小分数，并刷新获奖队伍列表，将最新的最小分数的队伍加入。
+            if (minFairPlayAward > teams.get(i).getFairPlayScore())
+            {
+                minFairPlayAward = teams.get(i).getFairPlayScore();
+                awardedTeam.clear();
+                awardedTeam.add(teams.get(i));
+            }
+            else
+            {
+                //如果等于，则不清空获奖队伍列表，直接加入
+                if (minFairPlayAward == teams.get(i).getFairPlayScore())
+                {
+                    awardedTeam.add(teams.get(i));
+                }
+            }
+        }
+        return awardedTeam;
     }
 
     public boolean allCharacter(String input)

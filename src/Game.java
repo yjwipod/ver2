@@ -8,15 +8,21 @@ import java.util.Scanner;
 public class Game
 {
     private ArrayList<Team> teams;
+    private ArrayList<String> results;
     private Menu menu;
     private Tools tools;
-    private int preliminaryFlag;
+    private int preliminaryStageFlag;
+    private int finalStageFlag;
 
     public Game() {
         teams = new ArrayList<>();
+        results = new ArrayList<>();
+        results.add("Final stage is not played.");
         menu = new Menu();
         tools = new Tools();
-        preliminaryFlag = 0;
+        //初赛和预赛的标识符，0为为比赛，1为已比赛
+        preliminaryStageFlag = 0;
+        finalStageFlag = 0;
     }
 
     public void startGame()
@@ -53,11 +59,12 @@ public class Game
                         break;
                     case "D":
                         readPlayers();
-                        readGoldenBootPlayers(getGoldenBootAward());
                         break;
                     case "E":
+                        displayResult();
                         break;
                     case "X":
+                        writeResultsToFile();
                         menu.finishInfo();
                         break;
                     default:
@@ -67,8 +74,6 @@ public class Game
             }
         }
     }
-
-
 
     public void inputPlayer()
     {
@@ -109,39 +114,114 @@ public class Game
 
     public void playPreliminaryStage()
     {
-        //开始预赛，读取每一个球队
-        for (int i = 0; i < teams.size(); i++)
+        //若预赛标识符为0，则可以进行预赛
+        if (preliminaryStageFlag == 0)
         {
-            //这样的取值方法下，teamA的排序永远比teamB靠前。重要！！！
-            Team teamA = teams.get(i);
-            //获取teamA之后的球队
-            for (int j = i + 1; j < teams.size(); j++)
+            //开始预赛，读取每一个球队
+            for (int i = 0; i < teams.size(); i++)
             {
-                Team teamB = teams.get(j);
-                String[] info = playGame(teamA, teamB);
-                menu.displayPreliminaryResult(teamA.getName(), teamB.getName(), info);
+                //这样的取值方法下，teamA的排序永远比teamB靠前。重要！！！
+                Team teamA = teams.get(i);
+                //获取teamA之后的球队
+                for (int j = i + 1; j < teams.size(); j++)
+                {
+                    Team teamB = teams.get(j);
+                    String[] info = playGame(teamA, teamB);
+                    menu.displayPreliminaryResult(teamA.getName(), teamB.getName(), info);
+                }
             }
+            //预赛标识符置1，代表预赛踢完了
+            preliminaryStageFlag = 1;
+            //踢完预赛后，teams列表排序，根据points，goals从高到低排序
+            teams = tools.sortTeams(teams);
         }
-        //预赛标识符置1，代表预赛踢完了
-        preliminaryFlag = 1;
-        teams = tools.sortTeams(teams);
+        else
+            menu.preliminaryPlayedError();
     }
 
     public void playFinalStage()
     {
-        if (preliminaryFlag == 1)
+        if (preliminaryStageFlag == 1 && finalStageFlag == 0)
         {
-
+            Team teamA = teams.get(0);
+            Team teamB = teams.get(1);
+            String[] finalInfo = playGame(teamA,teamB);
+            menu.displayPreliminaryResult(teamA.getName(), teamB.getName(), finalInfo);
+            int goalA = Integer.parseInt(finalInfo[0]);
+            int goalB = Integer.parseInt(finalInfo[1]);
+            if (goalA == goalB)
+            {
+                menu.displayPenaltyShootOutInfo();
+                int[] finalGoals = playPenaltyShootOut();
+                int penaltyShootOutGoalA = finalGoals[0];
+                int penaltyShootOutGoalB = finalGoals[1];
+                playOneRound(teamA,teamB,penaltyShootOutGoalA,penaltyShootOutGoalB,0,0);
+                goalA = goalA + penaltyShootOutGoalA;
+                goalB = goalB + penaltyShootOutGoalB;
+                menu.displayPenaltyShootOutResult(teamA,teamB,goalA,goalB,penaltyShootOutGoalA,penaltyShootOutGoalB);
+            }
+            teams = tools.sortTeams(teams);
+            finalStageFlag = 1;
         }
         else
         {
-            menu.noPreliminaryError();
+            if (preliminaryStageFlag == 0)
+                menu.noPreliminaryError();
+            if (finalStageFlag == 1)
+                menu.finalStagePlayedError();
         }
+    }
+
+    public int[] playPenaltyShootOut()
+    {
+        int penaltyShootOutGoalA = 0;
+        int penaltyShootOutGoalB = 0;
+        //先进行5轮点球大战
+        for (int i = 0; i < 6; i ++)
+        {
+            penaltyShootOutGoalA = penaltyShootOutGoalA + tools.randomNumber(2);
+            penaltyShootOutGoalB = penaltyShootOutGoalB + tools.randomNumber(2);
+        }
+        //如果5轮点球大战后还是打平，则进行一轮点球大战，直到有一方超过另一方
+        while (penaltyShootOutGoalA == penaltyShootOutGoalB)
+        {
+            penaltyShootOutGoalA = penaltyShootOutGoalA + tools.randomNumber(2);
+            penaltyShootOutGoalB = penaltyShootOutGoalB + tools.randomNumber(2);
+        }
+        int[] penaltyShootOutGoals = {penaltyShootOutGoalA, penaltyShootOutGoalB};
+        return penaltyShootOutGoals;
+    }
+
+    public void writeResultsToFile()
+    {
+        displayResult();
+        tools.writeFile(results);
     }
 
     public void displayResult()
     {
-
+        if (finalStageFlag != 0)
+        {
+            Team championTeam = teams.get(0);
+            String teamName = championTeam.getName();
+            results.clear();
+            results.add("Football World Cup Winner: " + teamName);
+            ArrayList<String> awardedPlayers = getGoldenBootAward();
+            for (int i = 0; i < awardedPlayers.size(); i ++)
+            {
+                String playerInfo = awardedPlayers.get(i);
+                String[] str = playerInfo.split(",");
+                String playerName = str[0];
+                String playerCountry = str[1];
+                results.add("Golden Boot Award: " + playerName + " from " + playerCountry);
+            }
+            ArrayList<Team> awardedTeams = tools.setFairPlayAward(teams);
+            for (int i = 0; i < awardedTeams.size(); i ++)
+            {
+                results.add("Fair Play Award: " + awardedTeams.get(i).getName());
+            }
+        }
+        menu.displayCupResult(results);
     }
 
     public String[] playGame(Team team1, Team team2)
@@ -329,6 +409,5 @@ public class Game
         Game game = new Game();
         game.startGame();
     }
-
     
 }
