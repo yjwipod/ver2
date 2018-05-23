@@ -1,9 +1,6 @@
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Random;
-import java.util.Scanner;
+import java.util.*;
 
 public class Tools {
 
@@ -68,19 +65,92 @@ public class Tools {
         return teams;
     }
 
-    public void sort(ArrayList<Team> teams)
+    public ArrayList<Team> sortTeams(ArrayList<Team> teams)
     {
+        ArrayList<Team> sortedTeams = new ArrayList<>();
+        int maxPoints = 0;
+        int ranking = 1;
+        Team topRankTeam = new Team();
 
+        while (teams.size() != 0)
+        {
+            maxPoints = teams.get(0).getPoints();
+            topRankTeam = teams.get(0);
+            for (int j = 1; j < teams.size(); j ++)
+            {
+                if (maxPoints < teams.get(j).getPoints())
+                {
+                    maxPoints = teams.get(j).getPoints();
+                    topRankTeam = teams.get(j);
+                }
+                else
+                {
+                    //积分相同的情况下，比较goals
+                    if (maxPoints == teams.get(j).getPoints())
+                    {
+                        int maxGoals = topRankTeam.getGoals();
+                        int teamJGoals = teams.get(j).getGoals();
+                        if (maxGoals < teamJGoals)
+                            topRankTeam = teams.get(j);
+                        else
+                        {
+                            //goals也相同的情况下，随机
+                            if (maxGoals == teamJGoals)
+                            {
+                                //取一个值，0或1
+                                int random = randomNumber(2);
+                                if (random == 0)
+                                    topRankTeam = teams.get(j);
+                            }
+                        }
+                    }
+                }
+            }
+            topRankTeam.setRanking(ranking);
+            sortedTeams.add(topRankTeam);
+            teams.remove(topRankTeam);
+            ranking ++;
+        }
+        return sortedTeams;
     }
-//
-//    public ArrayList sortByTeamGoals(ArrayList<Team> teams)
-//    {
-//        teams.sort(teams, );
-//        ArrayList<Team> newTeams = new ArrayList<Team>();
-//        //Collections.sort(teams,new SortByGoals);
-//
-//        return newTeams;
-//    }
+
+    public ArrayList<String> setGoldenBootAward(ArrayList<Team> teams)
+    {
+        ArrayList<String> goldenBootPlayers = new ArrayList<>();
+        int maxGoal = 0;
+        int ranking = 1;
+        Player goldenBootPlayer = new Player();
+
+        for (int i = 0; i < teams.size(); i ++)
+        {
+            ArrayList<Player> players = new ArrayList<>();
+            players.add(teams.get(i).getPlayer1());
+            players.add(teams.get(i).getPlayer2());
+            String teamName = teams.get(i).getName();
+
+            for (int j = 0; j < players.size(); j ++)
+            {
+                //若maxGoal小于当前读取的球员Goal，则更新maxGoal，并清空goldenBootPlayers表，将最大goal所对应的球员信息存入其中。
+                if (maxGoal < players.get(j).getGoals())
+                {
+                    maxGoal = players.get(j).getGoals();
+                    //将列表清空
+                    goldenBootPlayers.clear();
+                    goldenBootPlayers.add(players.get(j).getName() + "," + teamName);
+                }
+                else
+                {
+                    //若maxGoal与当前读取的球员Goal相等，则在goldenBootPlayers中加入（append），因为Golden Boot Awards允许多个球员获得。
+                    if (maxGoal == players.get(j).getGoals())
+                    {
+                        goldenBootPlayers.add(players.get(j).getName() + "," + teamName);
+                    }
+                }
+            }
+        }
+
+        return goldenBootPlayers;
+    }
 
     public boolean allCharacter(String input)
     {

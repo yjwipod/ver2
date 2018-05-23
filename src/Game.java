@@ -53,6 +53,7 @@ public class Game
                         break;
                     case "D":
                         readPlayers();
+                        readGoldenBootPlayers(getGoldenBootAward());
                         break;
                     case "E":
                         break;
@@ -123,6 +124,7 @@ public class Game
         }
         //预赛标识符置1，代表预赛踢完了
         preliminaryFlag = 1;
+        teams = tools.sortTeams(teams);
     }
 
     public void playFinalStage()
@@ -219,6 +221,25 @@ public class Game
         return fairPlayScore;
     }
 
+    public ArrayList<String> getGoldenBootAward()
+    {
+        ArrayList<String> awardedPlayers = new ArrayList<>();
+        awardedPlayers = tools.setGoldenBootAward(teams);
+        return awardedPlayers;
+    }
+
+    public void readGoldenBootPlayers(ArrayList<String> awardedPlayers)
+    {
+        for (int i = 0; i < awardedPlayers.size(); i ++)
+        {
+            String playerInfo = awardedPlayers.get(i);
+            String[] str = playerInfo.split(",");
+            String playerName = str[0];
+            String playerCountry = str[1];
+            menu.displayGoldenBootPlayersInfo(playerName, playerCountry);
+        }
+    }
+
     public void readTeam()
     {
         //逐一读取teams列表中的所有team
@@ -243,7 +264,6 @@ public class Game
             //读取team FairPlayScore
             int teamFairPlayScore = teams.get(i).getFairPlayScore();
             //显示team
-
             menu.displayTeamInfo(teamName,teamRank,teamPlayed,teamWins,teamLosts,teamDrawns,teamGoals,teamPoints,teamFairPlayScore);
         }
     }

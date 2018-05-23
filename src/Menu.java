@@ -32,7 +32,6 @@ public class Menu {
         System.out.println("Team text is loaded...");
     }
 
-
     public void emptyFileInfo()
     {
         System.out.println("Empty File");
@@ -119,5 +118,10 @@ public class Menu {
     public void noPreliminaryError()
     {
         System.out.println("The preliminary stage is not played.");
+    }
+
+    public void displayGoldenBootPlayersInfo(String playerName, String playerCountry)
+    {
+        System.out.println("Golden Boot Award: " + playerName + " from " + playerCountry);
     }
 }
