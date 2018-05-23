@@ -1,7 +1,10 @@
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Random;
+import java.util.Scanner;
+
 
 public class Tools {
 

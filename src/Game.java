@@ -1,8 +1,4 @@
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.Scanner;
 
 public class Game
@@ -306,18 +302,6 @@ public class Game
         ArrayList<String> awardedPlayers = new ArrayList<>();
         awardedPlayers = tools.setGoldenBootAward(teams);
         return awardedPlayers;
-    }
-
-    public void readGoldenBootPlayers(ArrayList<String> awardedPlayers)
-    {
-        for (int i = 0; i < awardedPlayers.size(); i ++)
-        {
-            String playerInfo = awardedPlayers.get(i);
-            String[] str = playerInfo.split(",");
-            String playerName = str[0];
-            String playerCountry = str[1];
-            menu.displayGoldenBootPlayersInfo(playerName, playerCountry);
-        }
     }
 
     public void readTeam()

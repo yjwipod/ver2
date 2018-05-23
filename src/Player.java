@@ -6,7 +6,7 @@ public class Player
 
     public Player()
     {
-        name = "";
+        name = "abc";
         goals = 0;
     }
 
