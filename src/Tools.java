@@ -24,12 +24,20 @@ public class Tools {
         return randomNumber;
     }
 
+    public int newRandom(int min, int max)
+    {
+        int random = 0;
+        Random builder = new Random();
+        //min ~ max + min
+        random = builder.nextInt(max + 1) + min;
+        return random;
+    }
+
     public ArrayList readFile()
     {
         ArrayList teams = new ArrayList<>();
         try
         {
-
             //定义文档名称
             String filename = "team.txt";
             //新建阅读器
@@ -43,8 +51,6 @@ public class Tools {
                 String line = parser.nextLine();
                 //识别每一行的逗号，将前后的信息分别取出，存入数组中
                 String[] detail = line.split(",");
-                //新建String构造器
-                StringBuilder subjectsToString = new StringBuilder();
                 //新建Team对象，存入数组中的信息：第0位的是team name，第1位的是ranking
                 Team newTeam = new Team(detail[0], Integer.parseInt(detail[1]));
                 //将这支team存入team list中
@@ -86,6 +92,28 @@ public class Tools {
         {
             menu.writeFileErrorInfo();
         }
+    }
+
+    public boolean writePlayer(ArrayList<Player> players, String textName)
+    {
+        boolean success = false;
+        try
+        {
+            PrintWriter outPutFile = new PrintWriter(textName);
+            for (int i = 0; i < players.size(); i ++)
+            {
+                String name = players.get(i).getName();
+                int goals = players.get(i).getGoals();
+                String content = name + "," + goals;
+                outPutFile.println(content);
+            }
+            outPutFile.close();
+        }
+        catch (IOException e)
+        {
+
+        }
+        return success;
     }
 
     public ArrayList<Team> sortTeams(ArrayList<Team> teams)

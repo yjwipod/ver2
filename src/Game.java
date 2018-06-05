@@ -10,13 +10,14 @@ public class Game
     private int preliminaryStageFlag;
     private int finalStageFlag;
 
-    public Game() {
+    public Game()
+    {
         teams = new ArrayList<>();
         results = new ArrayList<>();
         results.add("Final stage is not played.");
         menu = new Menu();
         tools = new Tools();
-        //初赛和预赛的标识符，0为为比赛，1为已比赛
+        //初赛和预赛的标识符，0为未比赛，1为已比赛
         preliminaryStageFlag = 0;
         finalStageFlag = 0;
     }
